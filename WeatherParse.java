@@ -23,24 +23,48 @@ public class WeatherParse {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-        
+
         // TODO parser le fichier
+
+        JSONParser parser = new JSONParser();
+        Object jsonParsed = null;
+        try {
+            jsonParsed = parser.parse(jsonFile);
+        } catch (ParseException | IOException e) {
+            e.printStackTrace();
+        }
 
         // TODO récupérer la racine du document
 
+        JSONObject root = (JSONObject) jsonParsed;
+
         // TODO afficher la valeur de l'attribut "name" de la racine
 
-        // TODO afficher les valeurs des attributs "lat" et "lon" de l'élément "coord" contenu dans la racine
+        String nomVille = (String) root.get("name");
+        System.out.println("City name: " + nomVille);
 
-        // TODO parcourir tous les éléments de "weather" et afficher le contenu de "main"
+        // TODO afficher les valeurs des attributs "lat" et "lon" de l'élément "coord"
+        // contenu dans la racine
 
+        JSONObject coord = (JSONObject) root.get("coord");
+        double latitude = (double) coord.get("lat");
+        double longitude = (double) coord.get("lon");
+        System.out.println("City latitude: " + latitude);
+        System.out.println("City longitude: " + longitude);
+
+        // TODO parcourir tous les éléments de "weather" et afficher le contenu de
+        // "main"
+
+        JSONArray weather = (JSONArray) root.get("weather");
+        for (int i = 0; i < weather.size(); i++) {
+            JSONObject main = (JSONObject) weather.get(i);
+            String temps = (String) main.get("main");
+            System.out.println("Weather: " + temps);
+        }
+        
         /*
-            Résultat attendu :
-            * City name: London
-            * City latitude: 51.51
-            * City longitude: -0.13
-            * Weather: Drizzle
-            * Weather: Clear
-        */
+         * Résultat attendu : City name: London City latitude: 51.51 City longitude:
+         * -0.13 Weather: Drizzle Weather: Clear
+         */
     }
 }
